@@ -150,5 +150,56 @@ def conv_tr(in_planes,
         dilation=dilation,
         has_bias=bias,
         kernel_generator=kernel_generator,
-        dimension=D
-    )
+        dimension=D)
+
+def avg_pool(kernel_size,
+             stride=1,
+             dilation=1,
+             conv_type = conv_type.HYPERCUBE,
+             in_coords_key=None,
+             D=-1):
+    assert D >0, 'Dimensinons to be a positive integer'
+    region_type, axis_types, kernel_size = convert_conv_type(conv_type, kernel_size, D)
+    kernel_generator = ME.KernelGenerator(
+        kernel_size, stride, dilation, region_type=region_type, axis_types=axis_types, dimension=D)
+
+    return ME.MinkowskiAvgPooling(
+        kernel_size=kernel_size,
+        stride=stride,
+        dilation=dilation,
+        kernel_generator=kernel_generator,
+        dimension=d)
+
+def avg_unpool(kernel_size,
+               stride=1,
+               dilation=1,
+               conv_type=ConvType.HYPERCUBE,
+               D=-1):
+
+    assert D > 0, 'Dimensin must be greater than 0'
+    region_type, axis_type, kernel_size = convert_conv_type(conv_type, kernel_size, D)
+    kernel_generator = ME.KernelGenerator(
+        kernel_size, stride, dilation, region_type=region_type, axis_types=axis_types, dimension=D)
+
+    return ME.MinkowskiAvgUnPooling(
+        kernel_size=kernel_size,
+        stride=stride,
+        dilation=dilation,
+        kernel_generator=kernel_generator,
+        dimension=d)
+
+def sum_pool(kernel_size, stride=1, dilation=1, conv_type=ConvType.HYPERCUBE, D=-1):
+    assert D > 0, 'Dimension must be greater than 0'
+    region_type, axis_types, kernel_size = convert_conv_type(conv_type, kernel_size, D)
+    kernel_generator = ME.KernelGenerator(
+        kernel_size, stride, dilation, region_type=region_type, axis_types=axis_types, dimension=D)
+    return ME.MinkowskiSumPooling(
+        kernel_size = kernel_size,
+        stride=stride,
+        dilation=dilation,
+        kernel_generator=kernel_generator,
+        dimension=D)
+
+
+
+print('Hello Tesla! I am modules.')
